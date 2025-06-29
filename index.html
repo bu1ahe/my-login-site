@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <title>假登入頁面</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    .switch {
+      margin-top: 10px;
+      text-align: center;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .ig-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .ig-link a {
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 5px;
+      background: #E1306C;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 5px;
+    }
+
+    .ig-link a:hover {
+      background: #c92d60;
+    }
+
+    .note {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="registerBox">
+    <h2>註冊</h2>
+    <input type="text" id="newUser" placeholder="使用者名稱" />
+    <input type="password" id="newPass" placeholder="密碼" />
+    <button onclick="register()">建立帳號</button>
+    <div class="switch" onclick="switchToLogin()">已有帳號？登入</div>
+  </div>
+
+  <div class="box" id="loginBox" style="display: none;">
+    <h2>登入</h2>
+    <p class="note">登入成功後會自動前往 IG ➡️</p>
+    <input type="text" id="loginUser" placeholder="使用者名稱" />
+    <input type="password" id="loginPass" placeholder="密碼" />
+    <button onclick="login()">登入</button>
+    <div class="ig-link">
+      <a href="https://www.instagram.com/hu_sky_test/" target="_blank">👉 直接造訪 IG</a>
+    </div>
+    <div class="switch" onclick="switchToRegister()">還沒有帳號？註冊</div>
+  </div>
+
+  <script>
+    let fakeDB = JSON.parse(localStorage.getItem("users")) || {};
+
+    function saveDB() {
+      localStorage.setItem("users", JSON.stringify(fakeDB));
+    }
+
+    function register() {
+      const user = document.getElementById('newUser').value.trim();
+      const pass = document.getElementById('newPass').value;
+
+      if (!user || !pass) {
+        alert("請輸入帳號和密碼！");
+        return;
+      }
+
+      if (fakeDB[user]) {
+        alert("此帳號已存在！");
+        return;
+      }
+
+      fakeDB[user] = pass;
+      saveDB();
+      alert("註冊成功！請登入～");
+      switchToLogin();
+    }
+
+    function login() {
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+
+      if (fakeDB[user] && fakeDB[user] === pass) {
+        alert("登入成功！歡迎回來，" + user + "！");
+        window.location.href = "https://www.instagram.com/";
+      } else {
+        alert("帳號或密碼錯誤！");
+      }
+    }
+
+    function switchToLogin() {
+      document.getElementById('registerBox').style.display = 'none';
+      document.getElementById('loginBox').style.display = 'block';
+    }
+
+    function switchToRegister() {
+      document.getElementById('loginBox').style.display = 'none';
+      document.getElementById('registerBox').style.display = 'block';
+    }
+  </script>
+
+</body>
+</html>
